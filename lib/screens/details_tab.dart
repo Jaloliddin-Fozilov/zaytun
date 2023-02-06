@@ -9,9 +9,10 @@ import 'package:zaytun/screens/building_details.dart';
 import 'package:zaytun/screens/building_planing.dart';
 import 'package:zaytun/widgets/icon_with_text.dart';
 import 'package:zaytun/widgets/buy_sell_progress.dart';
+import 'package:zaytun/widgets/image_loading.dart';
 
 class DetailsTab extends StatelessWidget {
-  final String homeId;
+  final int homeId;
   const DetailsTab(this.homeId, {super.key});
 
   @override
@@ -39,7 +40,10 @@ class DetailsTab extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Image.asset(home.imageUrl),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ImageLoading(url: home.imageUrl),
+                ),
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -89,13 +93,14 @@ class DetailsTab extends StatelessWidget {
                   BuySellProgress(
                     title: 'Доступная жилая площадь',
                     total: 66000,
-                    sell: 56100,
+                    booked: 56100,
+                    free: 546,
                   ),
-                  SizedBox(height: 20),
                   BuySellProgress(
-                    title: 'Доступная коммерческая площадь',
-                    total: 12500,
-                    sell: 11200,
+                    title: 'Доступная жилая площадь',
+                    total: 66000,
+                    booked: 56100,
+                    free: 546,
                   ),
                 ],
               ),

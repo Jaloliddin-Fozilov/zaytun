@@ -13,7 +13,7 @@ import 'package:zaytun/widgets/expension_progress_tile.dart';
 import 'package:zaytun/widgets/room_item.dart';
 
 class BuildingPlaning extends StatelessWidget {
-  final String homeId;
+  final int homeId;
   const BuildingPlaning(this.homeId, {super.key});
 
   @override

@@ -4,11 +4,13 @@ import 'package:zaytun/services/calcProgress.dart';
 class BuySellProgress extends StatelessWidget {
   final String title;
   final int total;
-  final int sell;
+  final int booked;
+  final int free;
   const BuySellProgress({
     required this.title,
     required this.total,
-    required this.sell,
+    required this.booked,
+    required this.free,
     Key? key,
   }) : super(key: key);
 
@@ -24,7 +26,7 @@ class BuySellProgress extends StatelessWidget {
         const SizedBox(height: 10),
         LinearProgressIndicator(
           minHeight: 7,
-          value: calculateProgress(total, sell),
+          value: calculateProgress(total, booked),
           backgroundColor: Colors.grey,
           color: Colors.greenAccent,
         ),
@@ -41,7 +43,7 @@ class BuySellProgress extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ),
             Text(
-              '$sell м²',
+              '$booked м²',
               style: const TextStyle(fontSize: 23, color: Colors.orange),
             ),
             const Text(
@@ -49,11 +51,12 @@ class BuySellProgress extends StatelessWidget {
               style: TextStyle(fontSize: 20),
             ),
             Text(
-              '${total - sell} м²',
+              '$free м²',
               style: const TextStyle(fontSize: 23, color: Colors.green),
             ),
           ],
         ),
+        const SizedBox(height: 20),
       ],
     );
   }

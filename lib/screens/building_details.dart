@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:zaytun/data/constants.dart';
 import 'package:zaytun/providers/home_provider.dart';
 import 'package:zaytun/widgets/buy_sell_progress.dart';
+import 'package:zaytun/widgets/image_loading.dart';
 
 class BuildingDetails extends StatelessWidget {
-  final String homeId;
+  final int homeId;
   const BuildingDetails(this.homeId, {super.key});
 
   @override
@@ -31,35 +32,23 @@ class BuildingDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(home.imageUrl),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: ImageLoading(url: home.imageUrl),
+            ),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                children: const [
-                  BuySellProgress(
-                    title: 'Башня М1 | Жилая площадь',
-                    total: 33000,
-                    sell: 26100,
-                  ),
-                  SizedBox(height: 20),
-                  BuySellProgress(
-                    title: 'Башня М1  | Коммерческая площадь',
-                    total: 5500,
-                    sell: 5200,
-                  ),
-                  SizedBox(height: 20),
-                  BuySellProgress(
-                    title: 'Башня М2 | Жилая площадь',
-                    total: 33000,
-                    sell: 26100,
-                  ),
-                  SizedBox(height: 20),
-                  BuySellProgress(
-                    title: 'Башня М2  | Коммерческая площадь',
-                    total: 5500,
-                    sell: 5200,
-                  ),
-                ],
+                children: home.towers
+                    .map(
+                      (tower) => BuySellProgress(
+                        title: tower.name,
+                        total: tower.totalArea,
+                        booked: tower.bookedArea,
+                        free: tower.freeArea,
+                      ),
+                    )
+                    .toList(),
               ),
             )
           ],
