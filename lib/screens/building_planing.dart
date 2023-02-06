@@ -4,21 +4,40 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zaytun/data/constants.dart';
-import 'package:zaytun/providers/building_provider.dart';
+import 'package:zaytun/models/home_model.dart';
+import 'package:zaytun/models/tower_model.dart';
 import 'package:zaytun/providers/home_provider.dart';
 import 'package:zaytun/screens/storey_details.dart';
-import 'package:zaytun/services/calcProgress.dart';
 import 'package:zaytun/widgets/custom_checkbox.dart';
 import 'package:zaytun/widgets/expension_progress_tile.dart';
 import 'package:zaytun/widgets/room_item.dart';
 
-class BuildingPlaning extends StatelessWidget {
+class BuildingPlaning extends StatefulWidget {
   final int homeId;
   const BuildingPlaning(this.homeId, {super.key});
 
   @override
+  State<BuildingPlaning> createState() => _BuildingPlaningState();
+}
+
+class _BuildingPlaningState extends State<BuildingPlaning> {
+  bool initVisit = true;
+  late HomeModel home;
+  late Tower tower;
+  int entrance = 0;
+
+  @override
+  void didChangeDependencies() {
+    if (initVisit) {
+      home = Provider.of<HomeProvider>(context).getHomeById(widget.homeId);
+      tower = home.towers[0];
+      initVisit = false;
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final buildingProvider = Provider.of<BuildingProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: BACKGROUNDCOLOR,
@@ -75,11 +94,15 @@ class BuildingPlaning extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Row(
-                            children: const [
-                              CustomCheckBox('M1', true, Colors.greenAccent),
-                              SizedBox(width: 5),
-                              CustomCheckBox('M2', false, Colors.greenAccent),
-                            ],
+                            children: home.towers
+                                .map(
+                                  (tower) => CustomCheckBox(
+                                    '${tower.name[6]}${tower.name[7]}',
+                                    true,
+                                    Colors.greenAccent,
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ],
                       ),
@@ -92,17 +115,15 @@ class BuildingPlaning extends StatelessWidget {
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 10),
-                          Row(children: const [
-                            CustomCheckBox('1', true, Colors.greenAccent),
-                            SizedBox(width: 5),
-                            CustomCheckBox('2', false, Colors.orange),
-                            SizedBox(width: 5),
-                            CustomCheckBox('3', true, Colors.orange),
-                            SizedBox(width: 5),
-                            CustomCheckBox('4', true, Colors.greenAccent),
-                            SizedBox(width: 5),
-                            CustomCheckBox('5', true, Colors.greenAccent),
-                          ]),
+                          Row(
+                            children: tower.entrances.map((entrance) {
+                              return CustomCheckBox(
+                                entrance.number.toString(),
+                                true,
+                                entrance.color,
+                              );
+                            }).toList(),
+                          ),
                         ],
                       ),
                     ],
@@ -169,8 +190,9 @@ class BuildingPlaning extends StatelessWidget {
                   SizedBox(
                     height: 500,
                     child: ListView.builder(
-                        itemCount: buildingProvider.list[0].storeys,
+                        itemCount: tower.entrances[entrance].floors!.length,
                         itemBuilder: (ctx, i) {
+                          final floor = tower.entrances[entrance].floors![i];
                           return Row(
                             children: [
                               Container(
@@ -182,16 +204,18 @@ class BuildingPlaning extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
-                                  children: buildingProvider.list[0].rooms.map(
-                                    (e) {
+                                  children: floor.flats.map(
+                                    (flat) {
                                       List<Color> colors = [
                                         Colors.white,
                                         Colors.greenAccent,
                                         Colors.yellow
                                       ];
                                       return RoomItem(
-                                        number: e.number,
-                                        place: e.place,
+                                        number: flat.amountOfRooms,
+                                        place: flat.capacity != null
+                                            ? flat.capacity
+                                            : 0.0,
                                         color: colors[
                                             Random().nextInt(colors.length)],
                                         function: () => Navigator.of(context)
@@ -210,7 +234,6 @@ class BuildingPlaning extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 50)
           ],
         ),
       ),

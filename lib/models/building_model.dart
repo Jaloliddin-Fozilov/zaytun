@@ -1,4 +1,4 @@
-import 'package:zaytun/models/room_model.dart';
+import 'package:zaytun/models/flat_model.dart';
 
 class BuildingModel {
   final String id;
@@ -6,7 +6,7 @@ class BuildingModel {
   final int entrances;
   final int storeys;
 
-  final List<RoomModel> rooms;
+  final List<FlatModel> rooms;
 
   BuildingModel({
     required this.id,

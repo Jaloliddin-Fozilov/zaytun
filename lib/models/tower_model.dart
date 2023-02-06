@@ -1,4 +1,4 @@
-import 'package:zaytun/models/floor_model.dart';
+import 'package:zaytun/models/entrances_model.dart';
 
 class Tower {
   final int id;
@@ -6,7 +6,7 @@ class Tower {
   final int totalArea;
   final int freeArea;
   final int bookedArea;
-  final List<FloorModel> floors;
+  final List<EntrancesModel> entrances;
 
   Tower({
     required this.id,
@@ -14,6 +14,6 @@ class Tower {
     required this.totalArea,
     required this.freeArea,
     required this.bookedArea,
-    required this.floors,
+    required this.entrances,
   });
 }

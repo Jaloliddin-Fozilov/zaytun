@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:zaytun/data/constants.dart';
-import 'package:zaytun/providers/building_provider.dart';
 import 'package:zaytun/providers/home_provider.dart';
 import 'package:zaytun/screens/splash_screen.dart';
 
@@ -18,7 +17,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => HomeProvider()),
-        ChangeNotifierProvider(create: (context) => BuildingProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

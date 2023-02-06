@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zaytun/data/constants.dart';
-import 'package:zaytun/models/room_model.dart';
+import 'package:zaytun/models/flat_model.dart';
 
 class Treaty extends StatelessWidget {
-  final RoomModel room;
+  final FlatModel room;
   final int storey;
   Treaty({super.key, required this.room, required this.storey});
 
@@ -75,13 +75,13 @@ class Treaty extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               Text(
-                '$storey этаж, Башня М1, ${room.number} / ${room.place} м²',
+                '$storey этаж, Башня М1, ${0} / ${0} м²',
                 style:
                     const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
-                'Стоимость: ${room.place * 2900}\$',
+                'Стоимость: ${2900}\$',
                 style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
               const SizedBox(height: 20),

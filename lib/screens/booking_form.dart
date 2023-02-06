@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zaytun/data/constants.dart';
-import 'package:zaytun/models/room_model.dart';
+import 'package:zaytun/models/flat_model.dart';
 import 'package:zaytun/screens/treaty.dart';
 
 class BookingForm extends StatefulWidget {
-  final RoomModel room;
+  final FlatModel room;
   final int storey;
   const BookingForm({super.key, required this.room, required this.storey});
 
@@ -60,13 +60,13 @@ class _BookingFormState extends State<BookingForm> {
             children: [
               const SizedBox(height: 20),
               Text(
-                '${widget.storey} этаж, Башня М1, ${widget.room.number} / ${widget.room.place} м²',
+                '${widget.storey} этаж, Башня М1, ${5} / ${5} м²',
                 style:
                     const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
-                'Стоимость: ${widget.room.place * 2900}\$',
+                'Стоимость: ${2900}\$',
                 style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
               const SizedBox(height: 20),

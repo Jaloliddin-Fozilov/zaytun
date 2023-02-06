@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zaytun/data/constants.dart';
-import 'package:zaytun/models/room_model.dart';
+import 'package:zaytun/models/flat_model.dart';
 import 'package:zaytun/screens/booking_form.dart';
 import 'package:zaytun/services/get_color_status.dart';
 
 class RoomDetails extends StatelessWidget {
   final int storey;
-  final RoomModel room;
+  final FlatModel room;
   const RoomDetails({
     super.key,
     required this.storey,
@@ -27,7 +27,7 @@ class RoomDetails extends StatelessWidget {
           iconSize: 20,
         ),
         title: Text(
-          '$storey этаж, Башня М1, ${room.number} / ${room.place} м²',
+          '$storey этаж, Башня М1, ${0} / ${0} м²',
           style: const TextStyle(color: Colors.white),
         ),
       ),
@@ -46,12 +46,12 @@ class RoomDetails extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Площадь: ${room.place} м²',
+                            'Площадь: ${0} м²',
                             style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Жилая: ${room.residential} м²',
+                            'Жилая: ${0} м²',
                             style: const TextStyle(fontSize: 16),
                           ),
                         ],
@@ -66,7 +66,7 @@ class RoomDetails extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Стоимость: ${2900 * room.place}\$',
+                            'Стоимость: ${2900}\$',
                             style: const TextStyle(fontSize: 16),
                           ),
                         ],
