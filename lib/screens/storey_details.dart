@@ -1,16 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:zaytun/data/constants.dart';
+import 'package:zaytun/models/floor_model.dart';
 import 'package:zaytun/screens/room_details.dart';
-import 'package:zaytun/services/get_color_status.dart';
+import 'package:zaytun/widgets/image_loading.dart';
 import 'package:zaytun/widgets/room_item.dart';
 
 class StoreyDetails extends StatelessWidget {
-  final int number;
-  const StoreyDetails(this.number, {super.key});
+  final FloorsModel floor;
+  final String towerName;
+  const StoreyDetails(this.floor, this.towerName, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class StoreyDetails extends StatelessWidget {
           iconSize: 20,
         ),
         title: Text(
-          '$number этаж, Башня М1',
+          '${floor.floor} этаж, $towerName',
           style: const TextStyle(color: Colors.white),
         ),
       ),
@@ -36,7 +35,10 @@ class StoreyDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              Image.asset('assets/images/etaj.png'),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ImageLoading(url: floor.image),
+              ),
               const SizedBox(height: 30),
               const Text(
                 'Выберите квартиру',
@@ -48,23 +50,25 @@ class StoreyDetails extends StatelessWidget {
               const SizedBox(height: 15),
               SizedBox(
                 height: 60,
-                // child: ListView.builder(
-                //   itemCount: buildingProvider.rooms.length,
-                //   scrollDirection: Axis.horizontal,
-                //   itemBuilder: (ctx, i) => RoomItem(
-                //     number: buildingProvider.rooms[i].number,
-                //     place: buildingProvider.rooms[i].place,
-                //     color: getColorByStatus(buildingProvider.rooms[i].status),
-                //     function: () => Navigator.of(context).push(
-                //       CupertinoPageRoute(
-                //         builder: (ctx) => RoomDetails(
-                //           storey: number,
-                //           room: buildingProvider.rooms[i],
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: floor.flats
+                      .map(
+                        (flat) => RoomItem(
+                          flat: flat,
+                          function: () => Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (ctx) => RoomDetails(
+                                storey: floor.floor,
+                                towerName: towerName,
+                                flat: flat,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
             ],
           ),

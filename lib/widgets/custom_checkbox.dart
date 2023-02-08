@@ -8,24 +8,20 @@ class CustomCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        margin: const EdgeInsets.only(right: 5),
-        width: 40,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(5),
-          border: isChecked
-              ? Border.all(color: Colors.white, width: 2)
-              : Border.all(color: Colors.grey, width: 2),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.black),
-        ),
+    return Container(
+      margin: const EdgeInsets.only(right: 5),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(5),
+        border: isChecked
+            ? Border.all(color: Colors.white, width: 2)
+            : Border.all(color: Colors.grey, width: 2),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.black),
       ),
     );
   }

@@ -93,16 +93,26 @@ class _BuildingPlaningState extends State<BuildingPlaning> {
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 10),
-                          Row(
-                            children: home.towers
-                                .map(
-                                  (tower) => CustomCheckBox(
-                                    '${tower.name[6]}${tower.name[7]}',
-                                    true,
-                                    Colors.greenAccent,
-                                  ),
-                                )
-                                .toList(),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: home.towers
+                                  .map(
+                                    (newTower) => GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          tower = newTower;
+                                        });
+                                      },
+                                      child: CustomCheckBox(
+                                        newTower.name,
+                                        true,
+                                        Colors.greenAccent,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
                           ),
                         ],
                       ),
@@ -115,14 +125,28 @@ class _BuildingPlaningState extends State<BuildingPlaning> {
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 10),
-                          Row(
-                            children: tower.entrances.map((entrance) {
-                              return CustomCheckBox(
-                                entrance.number.toString(),
-                                true,
-                                entrance.color,
-                              );
-                            }).toList(),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: tower.entrances.isNotEmpty
+                                  ? tower.entrances.map((newEntrance) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            entrance = newEntrance.number - 1;
+                                          });
+                                        },
+                                        child: CustomCheckBox(
+                                          newEntrance.number.toString(),
+                                          true,
+                                          newEntrance.color,
+                                        ),
+                                      );
+                                    }).toList()
+                                  : [
+                                      const Text('404'),
+                                    ],
+                            ),
                           ),
                         ],
                       ),
@@ -189,47 +213,44 @@ class _BuildingPlaningState extends State<BuildingPlaning> {
                   const SizedBox(height: 10),
                   SizedBox(
                     height: 500,
-                    child: ListView.builder(
-                        itemCount: tower.entrances[entrance].floors!.length,
-                        itemBuilder: (ctx, i) {
-                          final floor = tower.entrances[entrance].floors![i];
-                          return Row(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                width: 30,
-                                child: Text((i + 1).toString()),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: floor.flats.map(
-                                    (flat) {
-                                      List<Color> colors = [
-                                        Colors.white,
-                                        Colors.greenAccent,
-                                        Colors.yellow
-                                      ];
-                                      return RoomItem(
-                                        number: flat.amountOfRooms,
-                                        place: flat.capacity != null
-                                            ? flat.capacity
-                                            : 0.0,
-                                        color: colors[
-                                            Random().nextInt(colors.length)],
-                                        function: () => Navigator.of(context)
-                                            .push(CupertinoPageRoute(
-                                                builder: (ctx) =>
-                                                    StoreyDetails(i + 1))),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
+                    child: tower.entrances.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: tower.entrances[entrance].floors!.length,
+                            itemBuilder: (ctx, i) {
+                              final floor =
+                                  tower.entrances[entrance].floors![i];
+                              return Row(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 30,
+                                    child: Text(floor.floor.toString()),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: floor.flats.map(
+                                        (flat) {
+                                          return RoomItem(
+                                            flat: flat,
+                                            function: () =>
+                                                Navigator.of(context).push(
+                                                    CupertinoPageRoute(
+                                                        builder: (ctx) =>
+                                                            StoreyDetails(floor,
+                                                                tower.name))),
+                                          );
+                                        },
+                                      ).toList(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            })
+                        : const Center(
+                            child: Text('404'),
+                          ),
                   ),
                 ],
               ),

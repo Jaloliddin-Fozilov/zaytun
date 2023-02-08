@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:zaytun/models/flat_model.dart';
 
 class RoomItem extends StatelessWidget {
-  final int number;
-  final double place;
-  final Color color;
+  final FlatModel flat;
   final Function() function;
   const RoomItem({
     Key? key,
-    required this.number,
-    required this.place,
-    required this.color,
+    required this.flat,
     required this.function,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Color> colors = [Colors.greenAccent, Colors.white, Colors.yellow];
+
     return GestureDetector(
       onTap: function,
       child: Container(
@@ -23,7 +22,7 @@ class RoomItem extends StatelessWidget {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          color: color,
+          color: colors[flat.status],
           borderRadius: BorderRadius.circular(5),
         ),
         child: Column(
@@ -31,13 +30,15 @@ class RoomItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              number.toString(),
+              flat.amountOfRooms != null
+                  ? flat.amountOfRooms.toString()
+                  : 0.toString(),
               style: const TextStyle(
                 color: Colors.black,
               ),
             ),
             Text(
-              '$place м²',
+              '${flat.capacity != null ? flat.capacity : 0} м²',
               style: const TextStyle(color: Colors.black, fontSize: 11),
             ),
           ],
