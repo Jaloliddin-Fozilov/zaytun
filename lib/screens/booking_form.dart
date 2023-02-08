@@ -6,9 +6,15 @@ import 'package:zaytun/models/flat_model.dart';
 import 'package:zaytun/screens/treaty.dart';
 
 class BookingForm extends StatefulWidget {
-  final FlatModel room;
+  final FlatModel flat;
   final int storey;
-  const BookingForm({super.key, required this.room, required this.storey});
+
+  final String towerName;
+  const BookingForm(
+      {super.key,
+      required this.flat,
+      required this.storey,
+      required this.towerName});
 
   @override
   State<BookingForm> createState() => _BookingFormState();
@@ -17,14 +23,17 @@ class BookingForm extends StatefulWidget {
 class _BookingFormState extends State<BookingForm> {
   final _date = TextEditingController();
   DateTime selectedDate = DateTime.now();
+
+  final formKey = GlobalKey<FormState>();
+
   Future _selectDate(BuildContext context) async {
     DateFormat formatter = DateFormat('dd.MM.yyyy');
 
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(1901, 1),
-        lastDate: DateTime(2100));
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now());
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -47,9 +56,9 @@ class _BookingFormState extends State<BookingForm> {
           color: Colors.white,
           iconSize: 20,
         ),
-        title: const Text(
-          '29-12/22-РС от 01-12-22',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          '29-12/22-РС от ${DateFormat.yMd().format(DateTime.now())}',
+          style: const TextStyle(color: Colors.white),
         ),
       ),
       body: Padding(
@@ -60,17 +69,18 @@ class _BookingFormState extends State<BookingForm> {
             children: [
               const SizedBox(height: 20),
               Text(
-                '${widget.storey} этаж, Башня М1, ${5} / ${5} м²',
+                '${widget.storey} этаж, ${widget.towerName}, ${widget.flat.capacity} м²',
                 style:
                     const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
-                'Стоимость: ${2900}\$',
+                'Стоимость: ${widget.flat.price}\$',
                 style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
               const SizedBox(height: 20),
               Form(
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -233,7 +243,7 @@ class _BookingFormState extends State<BookingForm> {
                           onPressed: () => Navigator.of(context).push(
                             CupertinoPageRoute(
                               builder: (ctx) => Treaty(
-                                room: widget.room,
+                                room: widget.flat,
                                 storey: widget.storey,
                               ),
                             ),

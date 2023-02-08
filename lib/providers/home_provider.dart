@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:zaytun/models/entrances_model.dart';
 import 'package:zaytun/models/flat_model.dart';
 import 'package:zaytun/models/floor_model.dart';
@@ -19,26 +20,21 @@ class HomeProvider with ChangeNotifier {
     return _list.firstWhere((home) => home.id == id);
   }
 
-  var errorr;
-
   Future<void> getDataComplexas() async {
     final url = Uri.parse('http://zaytun.matrixfitness.uz/api/getComplexes');
 
-    final response = await http.get(url);
-
-    if (response.statusCode != 200) {
-      print('${response.statusCode}\n${response.body}');
-      getDataComplexas();
-    }
-
-    var data = jsonDecode(response.body);
-    final listData = data['data'] as List;
-    List<HomeModel> loadedList = [];
-    await Future.delayed(Duration.zero).then(
-      (_) => listData.forEach(
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        print('${response.statusCode}\n${response.body}');
+        getDataComplexas();
+      }
+      var data = jsonDecode(response.body);
+      final listData = data['data'] as List;
+      List<HomeModel> loadedList = [];
+      listData.forEach(
         (building) {
           var towers = building['towers'] as List;
-
           loadedList.add(
             HomeModel(
               id: building['id'],
@@ -58,19 +54,23 @@ class HomeProvider with ChangeNotifier {
                             flats.add(
                               FlatModel(
                                 id: flat['id'],
-                                owner: flat['owner'],
-                                contract: flat['contract'],
+                                owner: flat['owner'] ??
+                                    '', // required field & cannot be null
+                                contract: flat['contract'] ?? '',
                                 amountOfRooms: flat['amountOfRooms'] != null
                                     ? int.parse(flat['amountOfRooms'])
                                     : 0,
-                                square: flat['square'],
-                                capacity: flat['capacity'],
-                                priceM: flat['priceM'],
-                                price: flat['price'],
-                                status: flat['status'],
-                                bookingTime: flat['bookingTime'],
-                                image: flat['image'],
-                                fotoGallary: flat['fotoGallary'],
+                                square: flat['square'] ?? 0,
+                                capacity: flat['capacity'] ?? 0,
+                                priceM: flat['priceM'] ?? 0,
+                                price: flat['price'] ?? 0,
+                                status: flat['status'] ?? 0,
+                                bookingTime:
+                                    flat['bookingTime'] ?? DateTime.now(),
+                                image: flat['image'] ??
+                                    '/assets/images/modera.png',
+                                fotoGallary: flat['fotoGallary'] ??
+                                    ['/assets/images/modera.png'],
                               ),
                             );
                           });
@@ -95,6 +95,7 @@ class HomeProvider with ChangeNotifier {
                       );
                     },
                   );
+
                   return Tower(
                     id: tower['id'],
                     name: tower['name'],
@@ -108,9 +109,29 @@ class HomeProvider with ChangeNotifier {
             ),
           );
         },
-      ),
-    );
-    _list = loadedList;
-    notifyListeners();
+      );
+      _list = loadedList;
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<int> bookingOrder(FlatModel flat, int complexId, String token) async {
+    final url = Uri.parse('http://zaytun.matrixfitness.uz/api/booking');
+
+    var headers = {'Authorization': 'Bearer $token'};
+    final date =
+        '${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}';
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'http://zaytun.matrixfitness.uz/api/booking?complex_id=$complexId&contract=${0000}&date=$date&price=${flat.price}&id_of_flat=${flat.id}&type_id=${4}&manager_id=${3}'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    return response.statusCode;
   }
 }

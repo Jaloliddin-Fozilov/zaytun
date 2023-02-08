@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zaytun/data/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zaytun/providers/home_provider.dart';
+import 'package:zaytun/screens/building_planing.dart';
 import 'package:zaytun/screens/home_tab.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,7 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
 
-  final tabs = [
+  var tabs = [
     const HomeTab(),
     const Center(
       child: Text('Шахматка'),
@@ -38,6 +41,21 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: const Color(0xff121212),
           currentIndex: currentIndex,
           onTap: (index) {
+            if (index == 1) {
+              tabs = [
+                const HomeTab(),
+                BuildingPlaning(
+                    Provider.of<HomeProvider>(context, listen: false)
+                        .list[0]
+                        .id),
+                const Center(
+                  child: Text('Клиенты'),
+                ),
+                const Center(
+                  child: Text('Отчеты'),
+                ),
+              ];
+            }
             setState(() {
               currentIndex = index;
             });

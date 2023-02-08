@@ -42,12 +42,7 @@ class _BuildingPlaningState extends State<BuildingPlaning> {
       appBar: AppBar(
         backgroundColor: BACKGROUNDCOLOR,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back_ios),
-          color: Colors.white,
-          iconSize: 20,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Планировки',
           style: TextStyle(color: Colors.white),
@@ -238,8 +233,10 @@ class _BuildingPlaningState extends State<BuildingPlaning> {
                                                 Navigator.of(context).push(
                                                     CupertinoPageRoute(
                                                         builder: (ctx) =>
-                                                            StoreyDetails(floor,
-                                                                tower.name))),
+                                                            StoreyDetails(
+                                                                floor,
+                                                                tower.name,
+                                                                tower.id))),
                                           );
                                         },
                                       ).toList(),

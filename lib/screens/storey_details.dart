@@ -9,7 +9,8 @@ import 'package:zaytun/widgets/room_item.dart';
 class StoreyDetails extends StatelessWidget {
   final FloorsModel floor;
   final String towerName;
-  const StoreyDetails(this.floor, this.towerName, {super.key});
+  final int complexId;
+  const StoreyDetails(this.floor, this.towerName, this.complexId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,7 @@ class StoreyDetails extends StatelessWidget {
                                 storey: floor.floor,
                                 towerName: towerName,
                                 flat: flat,
+                                complexId: complexId,
                               ),
                             ),
                           ),
