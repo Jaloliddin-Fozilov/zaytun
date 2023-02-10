@@ -1,18 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:zaytun/data/constants.dart';
 import 'package:zaytun/models/flat_model.dart';
+import 'package:zaytun/providers/auth_provider.dart';
+import 'package:zaytun/providers/home_provider.dart';
 import 'package:zaytun/screens/treaty.dart';
 
 class BookingForm extends StatefulWidget {
   final FlatModel flat;
+  final int complexId;
   final int storey;
 
   final String towerName;
   const BookingForm(
       {super.key,
       required this.flat,
+      required this.complexId,
       required this.storey,
       required this.towerName});
 
@@ -21,27 +26,40 @@ class BookingForm extends StatefulWidget {
 }
 
 class _BookingFormState extends State<BookingForm> {
-  final _date = TextEditingController();
-  DateTime selectedDate = DateTime.now();
-
   final formKey = GlobalKey<FormState>();
 
-  Future _selectDate(BuildContext context) async {
-    DateFormat formatter = DateFormat('dd.MM.yyyy');
-
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1900),
-        lastDate: DateTime.now());
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-        _date.value = TextEditingValue(
-          text: formatter.format(picked),
-        );
-      });
+  void _submit() async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) {
+      return;
     }
+    formKey.currentState!.save();
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    await Provider.of<HomeProvider>(context, listen: false)
+        .bookingOrder(widget.flat, widget.complexId, token)
+        .then((statusCode) {
+      if (statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text(
+              'Успешно забронирован',
+              style: TextStyle(color: Colors.green),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: const Text(
+                    'Хорошо',
+                    style: TextStyle(color: Colors.blue),
+                  ))
+            ],
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -93,125 +111,20 @@ class _BookingFormState extends State<BookingForm> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.grey,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Серия паспорта',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 10),
-                              TextFormField(
-                                keyboardType: TextInputType.text,
-                                maxLength: 2,
-                                style: const TextStyle(color: Colors.white),
-                                decoration: const InputDecoration(
-                                  counterStyle: TextStyle(color: Colors.grey),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 1,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Expanded(flex: 1, child: SizedBox()),
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Номер паспорта',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 10),
-                              TextFormField(
-                                maxLength: 7,
-                                style: const TextStyle(color: Colors.white),
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  counterStyle: TextStyle(color: Colors.grey),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 1,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    const Text(
-                      'Год рождения',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      keyboardType: TextInputType.datetime,
-                      style: const TextStyle(color: Colors.white),
-                      controller: _date,
-                      onTap: () => _selectDate(context),
-                      decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    const Text(
-                      'Адрес проживания',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Поле не должно быть пустым';
+                          }
+                        }),
                     const SizedBox(height: 15),
                     const Text(
                       'Номер телефона',
@@ -232,6 +145,11 @@ class _BookingFormState extends State<BookingForm> {
                           ),
                         ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Введите ваш номер телефона';
+                        }
+                      },
                     ),
                     const SizedBox(height: 30),
                     Padding(
@@ -240,14 +158,17 @@ class _BookingFormState extends State<BookingForm> {
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () => Navigator.of(context).push(
-                            CupertinoPageRoute(
-                              builder: (ctx) => Treaty(
-                                room: widget.flat,
-                                storey: widget.storey,
-                              ),
-                            ),
-                          ),
+                          onPressed: () async {
+                            _submit();
+                            // go to orders
+                            //  Navigator.of(context).push(
+                            //   CupertinoPageRoute(
+                            //     builder: (ctx) => Treaty(
+                            //       room: widget.flat,
+                            //       storey: widget.storey,
+                            //     ),
+                            //   ),
+                          },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.amber),
                           child: const Text('Забронировать'),

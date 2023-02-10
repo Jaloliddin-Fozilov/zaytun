@@ -180,7 +180,7 @@ class _BuildingPlaningState extends State<BuildingPlaning> {
                             width: 15,
                             height: 15,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.yellowAccent,
                               borderRadius: BorderRadius.circular(180),
                             ),
                           ),
@@ -195,7 +195,7 @@ class _BuildingPlaningState extends State<BuildingPlaning> {
                             width: 15,
                             height: 15,
                             decoration: BoxDecoration(
-                              color: Colors.yellow,
+                              color: Colors.redAccent,
                               borderRadius: BorderRadius.circular(180),
                             ),
                           ),

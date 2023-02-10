@@ -16,14 +16,6 @@ class HomeTab extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: BACKGROUNDCOLOR,
-        leading: IconButton(
-          onPressed: () {},
-          icon: SvgPicture.asset('assets/icons/right_menu.svg'),
-        ),
-        elevation: 0,
-      ),
       body: FutureBuilder(
         future: homeProvider.getDataComplexas(),
         builder: (context, snapshot) {

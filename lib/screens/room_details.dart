@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,7 @@ import 'package:zaytun/data/constants.dart';
 import 'package:zaytun/models/flat_model.dart';
 import 'package:zaytun/providers/auth_provider.dart';
 import 'package:zaytun/providers/home_provider.dart';
+import 'package:zaytun/screens/booking_form.dart';
 import 'package:zaytun/screens/home_page.dart';
 import 'package:zaytun/widgets/image_loading.dart';
 
@@ -91,48 +93,18 @@ class RoomDetails extends StatelessWidget {
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () async {
-                                final token = Provider.of<AuthProvider>(context,
-                                        listen: false)
-                                    .token;
-                                await Provider.of<HomeProvider>(context,
-                                        listen: false)
-                                    .bookingOrder(flat, complexId, token)
-                                    .then((statusCode) {
-                                  if (statusCode == 200) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (ctx) => AlertDialog(
-                                        title: const Text(
-                                          'Успешно забронирован',
-                                          style: TextStyle(color: Colors.green),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.of(ctx).pop();
-                                              },
-                                              child: const Text(
-                                                'Хорошо',
-                                                style: TextStyle(
-                                                    color: Colors.blue),
-                                              ))
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                });
-
+                              onPressed: () {
                                 // Go to booking form
-                                // Navigator.of(context).push(
-                                //   CupertinoPageRoute(
-                                //     builder: (ctx) => BookingForm(
-                                //       flat: flat,
-                                //       storey: storey,
-                                //       towerName: towerName,
-                                //     ),
-                                //   ),
-                                // );
+                                Navigator.of(context).push(
+                                  CupertinoPageRoute(
+                                    builder: (ctx) => BookingForm(
+                                      flat: flat,
+                                      storey: storey,
+                                      complexId: complexId,
+                                      towerName: towerName,
+                                    ),
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.amber),

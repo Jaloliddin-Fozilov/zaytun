@@ -12,7 +12,11 @@ class RoomItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Color> colors = [Colors.greenAccent, Colors.white, Colors.yellow];
+    List<Color> colors = [
+      Colors.greenAccent,
+      Colors.yellowAccent,
+      Colors.redAccent
+    ];
 
     return GestureDetector(
       onTap: function,

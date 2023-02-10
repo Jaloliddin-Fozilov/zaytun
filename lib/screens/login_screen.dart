@@ -18,10 +18,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     void _submit() async {
-      await authProvider.authLogin(login, password);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const HomePage()),
-          (Route<dynamic> route) => false);
+      formKey.currentState!.save();
+      if (formKey.currentState!.validate()) {
+        await authProvider.authLogin(login.trim(), password.trim());
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const HomePage()),
+            (Route<dynamic> route) => false);
+      }
     }
 
     return Scaffold(
@@ -62,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          TextField(
+                          TextFormField(
                             style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
                               labelText: 'Email или номер телефонаа',
@@ -75,6 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.grey), //<-- SEE HERE
                               ),
                             ),
+                            validator: (value) {
+                              // validate textformfield email
+                              if (value!.isEmpty) {
+                                return 'Введите ваш Email или номер телефонаа';
+                              }
+                            },
                             onChanged: (value) {
                               setState(() {
                                 login = value;
@@ -90,8 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          TextField(
+                          TextFormField(
                             style: const TextStyle(color: Colors.white),
+                            obscureText: true,
                             decoration: const InputDecoration(
                               labelText: 'Ваш пароль',
                               labelStyle: TextStyle(
@@ -103,6 +113,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.grey), //<-- SEE HERE
                               ),
                             ),
+                            validator: (value) {
+                              // validate textformfield password
+                              if (value!.isEmpty) {
+                                return 'Введите ваш пароль';
+                              }
+                            },
                             onChanged: (value) {
                               setState(() {
                                 password = value;
