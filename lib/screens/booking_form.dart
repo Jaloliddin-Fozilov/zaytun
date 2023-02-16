@@ -28,15 +28,17 @@ class BookingForm extends StatefulWidget {
 class _BookingFormState extends State<BookingForm> {
   final formKey = GlobalKey<FormState>();
 
+  String name = '';
+  String phone = '';
+
   void _submit() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
     formKey.currentState!.save();
-    final token = Provider.of<AuthProvider>(context, listen: false).token;
     await Provider.of<HomeProvider>(context, listen: false)
-        .bookingOrder(widget.flat, widget.complexId, token)
+        .bookingOrder(widget.flat, widget.complexId, name, phone)
         .then((statusCode) {
       if (statusCode == 200) {
         showDialog(
@@ -120,6 +122,11 @@ class _BookingFormState extends State<BookingForm> {
                             ),
                           ),
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            name = value;
+                          });
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Поле не должно быть пустым';
@@ -145,6 +152,11 @@ class _BookingFormState extends State<BookingForm> {
                           ),
                         ),
                       ),
+                      onChanged: (value) => {
+                        setState(() {
+                          phone = value;
+                        })
+                      },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Введите ваш номер телефона';

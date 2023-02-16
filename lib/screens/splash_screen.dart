@@ -15,12 +15,15 @@ class SplashScreen extends StatelessWidget {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? login = prefs.getString('login');
       String? password = prefs.getString('password');
+      String? token = prefs.getString('token');
       if (login != null &&
           login.isNotEmpty &&
           password != null &&
           password.isNotEmpty) {
-        await Provider.of<AuthProvider>(context, listen: false)
-            .authLogin(login, password);
+        // await Provider.of<AuthProvider>(context, listen: false)
+        //     .authLogin(login, password);
+
+        print(token);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const HomePage()),
             (Route<dynamic> route) => false);

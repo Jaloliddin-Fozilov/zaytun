@@ -16,6 +16,7 @@ class AuthProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('login', username);
     prefs.setString('password', password);
+    prefs.setString('token', token);
     notifyListeners();
   }
 }

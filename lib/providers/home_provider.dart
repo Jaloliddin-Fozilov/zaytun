@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zaytun/models/entrances_model.dart';
 import 'package:zaytun/models/flat_model.dart';
 import 'package:zaytun/models/floor_model.dart';
@@ -117,16 +118,18 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  Future<int> bookingOrder(FlatModel flat, int complexId, String token) async {
+  Future<int> bookingOrder(
+      FlatModel flat, int complexId, String phone, String name) async {
     final url = Uri.parse('http://zaytun.matrixfitness.uz/api/booking');
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
     var headers = {'Authorization': 'Bearer $token'};
     final date =
         '${DateTime.now().year}.${DateTime.now().month}.${DateTime.now().day}';
     var request = http.Request(
         'POST',
         Uri.parse(
-            'http://zaytun.matrixfitness.uz/api/booking?complex_id=$complexId&contract=${0000}&date=$date&price=${flat.price}&id_of_flat=${flat.id}&type_id=${4}&manager_id=${3}'));
+            'http://zaytun.matrixfitness.uz/api/booking?complex_id=$complexId&contract=${0000}&date=$date&price=${flat.price}&id_of_flat=${flat.id}&type_id=${4}&manager_id=${3}?name=$name&phone=$phone'));
 
     request.headers.addAll(headers);
 
